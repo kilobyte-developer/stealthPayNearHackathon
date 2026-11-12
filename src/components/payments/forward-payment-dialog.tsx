@@ -28,9 +28,8 @@ import type { PaymentRow } from "@/lib/payments/view-model";
  * Sweeps a detected stealth payment's full native balance to a destination
  * address, signing locally with the one-time key derived for that address.
  *
- * Only reachable for native payments (`payment.spendable`): an ERC-20
- * balance cannot pay its own gas, so there is nothing this dialog could do
- * for one yet.
+ * Token forwarding is available when the same stealth address also holds a
+ * sender-funded native gas balance.
  */
 export function ForwardPaymentDialog({
   payment,
@@ -86,6 +85,9 @@ export function ForwardPaymentDialog({
       viewTag: payment.viewTag as `0x${string}`,
       schemeId: payment.schemeId,
       to: to as Address,
+      token: payment.token as Address | undefined,
+      tokenAmount: payment.token ? payment.verifiedBalance : undefined,
+      tokenDecimals: payment.token ? payment.tokenDecimals ?? 0 : undefined,
     });
 
     if (result.ok && result.txHash) {

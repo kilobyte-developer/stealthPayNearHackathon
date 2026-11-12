@@ -12,12 +12,12 @@
 | Compiled | ✅ solc 0.8.28, `evmVersion: cancun`, optimizer 200 runs |
 | Local tests | ✅ 39 passing |
 | Cross-layer integration | ✅ 5 passing (real crypto engine ↔ real contracts) |
-| **Deployed to Fuji** | ❌ **Not deployed** — no funded deployer key available |
+| **Deployed to Fuji** | ✅ **Live** — Announcer, Router, and test token deployed and verified |
 | Deployed to mainnet | ❌ Out of scope, blocked in config |
 
-**No contract addresses exist yet.** Nothing in this repository claims
-otherwise. The deployment scripts refuse to run without a funded key rather
-than producing a placeholder.
+The live addresses are recorded in `contracts/deployments/fuji.json` and
+`CONTRACT_DEPLOYMENT.md`. Deployment scripts still refuse to run without a
+funded key rather than producing a placeholder.
 
 ## 2. Avalanche EVM target — determined empirically
 

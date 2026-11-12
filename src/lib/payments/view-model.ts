@@ -14,6 +14,10 @@ export interface PaymentRow {
   declaredAmount: string | null;
   /** What the address verifiably holds right now. */
   verifiedAmount: string;
+  verifiedBalance: bigint;
+  tokenDecimals: number | null;
+  /** Native gas balance held by the same stealth address. */
+  nativeBalance: bigint;
   spendable: boolean;
   blockNumber: bigint;
   transactionHash: string;
@@ -33,7 +37,7 @@ function decimalsFor(payment: DetectedPayment): number {
 }
 
 function assetLabelFor(payment: DetectedPayment): string {
-  if (payment.assetKind === "native") return "AVAX";
+  if (payment.assetKind === "native") return payment.nativeSymbol;
   if (payment.tokenSymbol) return payment.tokenSymbol;
   return payment.token ? truncateMiddle(payment.token, 6, 4) : "Token";
 }
@@ -58,9 +62,10 @@ export function toPaymentRow(payment: DetectedPayment): PaymentRow {
     verifiedAmount: trimTrailingZeros(
       formatUnits(payment.verifiedBalance, decimals),
     ),
-    // An ERC-20 balance cannot pay its own gas, so it is not spendable on its
-    // own — the stealth account needs native AVAX first.
-    spendable: payment.assetKind === "native",
+    verifiedBalance: payment.verifiedBalance,
+    tokenDecimals: payment.tokenDecimals,
+    spendable: payment.assetKind === "native" || payment.nativeBalance > 0n,
+    nativeBalance: payment.nativeBalance,
     blockNumber: payment.blockNumber,
     transactionHash: payment.transactionHash,
     announcer: payment.announcer,

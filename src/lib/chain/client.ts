@@ -36,6 +36,32 @@ const chains = {
     },
     testnet: false,
   }),
+  "aurora-testnet": defineChain({
+    id: NETWORKS["aurora-testnet"].chainId,
+    name: NETWORKS["aurora-testnet"].name,
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: { default: { http: [NETWORKS["aurora-testnet"].rpcUrl] } },
+    blockExplorers: {
+      default: {
+        name: NETWORKS["aurora-testnet"].explorerName,
+        url: NETWORKS["aurora-testnet"].explorerUrl,
+      },
+    },
+    testnet: true,
+  }),
+  "aurora-mainnet": defineChain({
+    id: NETWORKS["aurora-mainnet"].chainId,
+    name: NETWORKS["aurora-mainnet"].name,
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: { default: { http: [NETWORKS["aurora-mainnet"].rpcUrl] } },
+    blockExplorers: {
+      default: {
+        name: NETWORKS["aurora-mainnet"].explorerName,
+        url: NETWORKS["aurora-mainnet"].explorerUrl,
+      },
+    },
+    testnet: false,
+  }),
 } as const;
 
 const cache = new Map<NetworkKey, PublicClient>();

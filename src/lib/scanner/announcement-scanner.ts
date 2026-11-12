@@ -1,6 +1,13 @@
-import { erc20Abi, type Address, type Hex } from "viem";
+import {
+  decodeEventLog,
+  decodeFunctionData,
+  erc20Abi,
+  type Address,
+  type Hex,
+} from "viem";
+import { StealthPaymentRouterAbi } from "@/config/abi";
 import { getPublicClient } from "@/lib/chain/client";
-import { NETWORKS } from "@/config/networks";
+import { CONTRACTS, NETWORKS } from "@/config/networks";
 import { parseAnnouncementMetadata } from "./metadata";
 import { ANNOUNCEMENT_EVENT } from "./announcement-event";
 import { decodeExplorerLog, fetchAnnouncementsViaExplorerApi } from "./explorer-api";
@@ -107,10 +114,13 @@ export interface DetectedPayment {
   token: Address | null;
   tokenSymbol: string | null;
   tokenDecimals: number | null;
+  nativeSymbol: string;
   /** Amount the announcement declared. A claim, not proof. */
   announcedAmount: bigint | null;
   /** Balance actually held by the stealth address right now. Verified. */
   verifiedBalance: bigint;
+  /** Native balance available to pay gas from this stealth address. */
+  nativeBalance: bigint;
   blockNumber: bigint;
   transactionHash: Hex;
   logIndex: number;
@@ -154,6 +164,90 @@ export interface ScanResult {
 }
 
 const tokenMetaCache = new Map<string, { symbol: string | null; decimals: number | null }>();
+
+function sameAddress(left: string, right: string): boolean {
+  return left.toLowerCase() === right.toLowerCase();
+}
+
+async function verifyPaymentTransaction({
+  network,
+  log,
+  stealthAddress,
+  parsed,
+}: {
+  network: NetworkKey;
+  log: AnnouncementLog;
+  stealthAddress: Address;
+  parsed: NonNullable<ReturnType<typeof parseAnnouncementMetadata>>;
+}): Promise<boolean> {
+  const router = CONTRACTS[network].router;
+  if (!router || parsed.kind === "unknown" || parsed.amount === null) return false;
+
+  const client = getPublicClient(network);
+  const transaction = await client.getTransaction({ hash: log.transactionHash });
+  if (!transaction.to || !sameAddress(transaction.to, router)) return false;
+
+  let decoded;
+  try {
+    decoded = decodeFunctionData({
+      abi: StealthPaymentRouterAbi,
+      data: transaction.input,
+    });
+  } catch {
+    return false;
+  }
+
+  if (parsed.kind === "native") {
+    if (decoded.functionName !== "payNative" && decoded.functionName !== "payERC20") {
+      return false;
+    }
+    const destination =
+      decoded.functionName === "payNative"
+        ? decoded.args?.[0]
+        : decoded.args?.[1];
+    return (
+      typeof destination === "string" &&
+      sameAddress(destination, stealthAddress) &&
+      transaction.value === parsed.amount
+    );
+  }
+
+  if (decoded.functionName !== "payERC20") return false;
+  const token = decoded.args?.[0];
+  const destination = decoded.args?.[1];
+  const amount = decoded.args?.[2];
+  if (
+    typeof token !== "string" ||
+    !parsed.token ||
+    !sameAddress(token, parsed.token) ||
+    typeof destination !== "string" ||
+    !sameAddress(destination, stealthAddress) ||
+    typeof amount !== "bigint" ||
+    amount !== parsed.amount
+  ) {
+    return false;
+  }
+
+  const receipt = await client.getTransactionReceipt({ hash: log.transactionHash });
+  return receipt.logs.some((receiptLog) => {
+    if (!sameAddress(receiptLog.address, parsed.token!)) return false;
+    try {
+      const event = decodeEventLog({
+        abi: erc20Abi,
+        data: receiptLog.data,
+        topics: receiptLog.topics,
+      });
+      return (
+        event.eventName === "Transfer" &&
+        typeof event.args.to === "string" &&
+        sameAddress(event.args.to, stealthAddress) &&
+        event.args.value === parsed.amount
+      );
+    } catch {
+      return false;
+    }
+  });
+}
 
 async function readTokenMeta(network: NetworkKey, token: Address) {
   const key = `${network}:${token.toLowerCase()}`;
@@ -271,8 +365,26 @@ export async function scanAnnouncements(
     if (result.reason !== "view-tag-mismatch") viewTagMatches += 1;
     if (!result.isForUser) return;
 
+    if (parsed.kind === "unknown" || parsed.amount === null) return;
+
+    try {
+      if (
+        !(await verifyPaymentTransaction({
+          network,
+          log,
+          stealthAddress,
+          parsed,
+        }))
+      ) {
+        return;
+      }
+    } catch {
+      return;
+    }
+
     // ---- Verify the funds are really there ----
     let verifiedBalance = 0n;
+    let nativeBalance = 0n;
     let tokenSymbol: string | null = null;
     let tokenDecimals: number | null = null;
 
@@ -287,10 +399,14 @@ export async function scanAnnouncements(
         const meta = await readTokenMeta(network, parsed.token);
         tokenSymbol = meta.symbol;
         tokenDecimals = meta.decimals;
-      } else {
+        nativeBalance = await client.getBalance({ address: stealthAddress });
+      } else if (parsed.kind === "native") {
         verifiedBalance = await client.getBalance({
           address: stealthAddress,
         });
+        nativeBalance = verifiedBalance;
+      } else {
+        return;
       }
     } catch {
       return;
@@ -323,8 +439,10 @@ export async function scanAnnouncements(
       token: parsed.token,
       tokenSymbol,
       tokenDecimals,
+      nativeSymbol: NETWORKS[network].currencySymbol,
       announcedAmount: parsed.amount,
       verifiedBalance,
+      nativeBalance,
       blockNumber: log.blockNumber,
       transactionHash: log.transactionHash,
       logIndex: log.logIndex,

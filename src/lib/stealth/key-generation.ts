@@ -1,5 +1,9 @@
 import { utils } from "@noble/secp256k1";
-import { SCHEME_ID_SECP256K1, type SupportedChainId } from "./constants";
+import {
+  chainLabelForId,
+  SCHEME_ID_SECP256K1,
+  type SupportedChainId,
+} from "./constants";
 import { StealthError } from "./errors";
 import { SecretKeyMaterial } from "./secure-memory";
 import { compressedPublicKeyFrom } from "./address-utils";
@@ -112,6 +116,7 @@ export function buildIdentityFromSecrets({
   const { uri, raw } = buildStealthMetaAddress({
     spendingPublicKey,
     viewingPublicKey,
+    chainLabel: chainLabelForId(chainId),
   });
 
   return {

@@ -127,7 +127,7 @@ flowchart TB
 | UI | Custom Neo-Brutalist design system, Radix primitives (dialog, dropdown), lucide-react, `qrcode.react` | **Built** |
 | Wallets | EIP-6963 discovery + EIP-1193 requests, viem types — MetaMask & Core compatible | **Built** |
 | Blockchain reads | Public Avalanche JSON-RPC (`eth_blockNumber` health check) | **Built** |
-| Contracts | Solidity 0.8.28, Hardhat 2.29, OpenZeppelin 5.6 — `ERC5564Announcer` + `StealthPaymentRouter` | **Built, not deployed** |
+| Contracts | Solidity 0.8.28, Hardhat 2.29, OpenZeppelin 5.6 — `ERC5564Announcer` + `StealthPaymentRouter` | **Built, tested, and deployed to Fuji** |
 | Key recovery | Argon2id (`hash-wasm`) + AES-256-GCM (Web Crypto), IndexedDB (`idb`) | **Built** |
 | Cryptography | `@scopelift/stealth-address-sdk` 1.0.0-beta.5, `@noble/secp256k1`, viem — ERC-5564 scheme 1 | **Built** |
 | Backend | Node.js, TypeScript, Next.js API routes, standalone scanner worker | Planned |
@@ -154,8 +154,30 @@ StealthPay is built directly against the **Avalanche C-Chain**, an EVM-compatibl
 |---|---|---|---|---|
 | **Avalanche Fuji (Testnet)** | `43113` | `https://api.avax-test.network/ext/bc/C/rpc` | [testnet.snowtrace.io](https://testnet.snowtrace.io/) | **Default** development & demo network |
 | **Avalanche C-Chain (Mainnet)** | `43114` | `https://api.avax.network/ext/bc/C/rpc` | [snowtrace.io](https://snowtrace.io/) | Future production target (not used during development) |
+| **Aurora Testnet (EVM on NEAR)** | `1313161555` | `https://testnet.aurora.dev` | [explorer.testnet.aurora.dev](https://explorer.testnet.aurora.dev/) | NEAR ecosystem EVM target |
+| **Aurora Mainnet (EVM on NEAR)** | `1313161554` | `https://mainnet.aurora.dev` | [explorer.aurora.dev](https://explorer.aurora.dev/) | Future production target |
 
 Fuji is the default network everywhere in the app. Real assets are never used during development or demos.
+
+## NEAR Hackathon Integration
+
+The Avalanche stealth-payment application is the pre-existing baseline. The
+NEAR HACKATHON work is additive and does not replace the core privacy model:
+
+- Native NEAR Testnet and Mainnet network metadata was added.
+- A typed native NEAR JSON-RPC client reads account balances and finalized blocks.
+- NEAR Connect (`@hot-labs/near-connect`) provides wallet connection, account
+    restoration, sign-out, and native transfer signing.
+- A chain-neutral adapter boundary keeps EVM/Avalanche and native NEAR paths
+    separate.
+- Aurora Testnet and Mainnet are configured as EVM-compatible NEAR ecosystem
+    targets, so the existing Solidity router and ERC-5564 scheme can be reused
+    without changing the privacy model.
+
+The existing ERC-5564 scheme, Avalanche contracts, scanner, vault, and UI remain
+unchanged. Native NEAR stealth-payment contracts, native NEAR announcement
+scanning, and a NEAR-specific stealth cryptographic scheme are future work and
+are not claimed as implemented yet.
 
 ## Project Structure
 
@@ -269,7 +291,7 @@ probed and carry Cancun fields (`blobGasUsed`, `excessBlobGas`,
 | Network | `eth_getCode` at `0x55649E…45564` | Outcome |
 |---|---|---|
 | Avalanche mainnet (43114) | 709 bytes | Deployed |
-| Avalanche **Fuji** (43113) | `0x` | **Not deployed** |
+| Avalanche **Fuji** (43113) | `0x` at the canonical singleton | **Reference instance deployed separately** |
 
 The ERC does not publish the init code or salt behind its canonical address, so
 that address cannot be reproduced on Fuji. We therefore deploy the reference
@@ -284,11 +306,13 @@ appears there.
 
 | Contract | Address | Explorer Link |
 |---|---|---|
-| `ERC5564Announcer` | _not deployed — needs a funded Fuji deployer key_ | — |
-| `StealthPaymentRouter` | _not deployed — needs a funded Fuji deployer key_ | — |
+| `ERC5564Announcer` | `0x576c07eba9A19e2c31da9359193b7f3F70a21342` | [Snowtrace](https://testnet.snowtrace.io/address/0x576c07eba9A19e2c31da9359193b7f3F70a21342) |
+| `StealthPaymentRouter` | `0xB14D5665f5BF628e8D297E252b0f09C4B42009cB` | [Snowtrace](https://testnet.snowtrace.io/address/0xB14D5665f5BF628e8D297E252b0f09C4B42009cB) |
+| `StealthPayTestToken` | `0xB114A2B17F1E7b028249cCFec2D98D25a3Bbe9C0` | [Snowtrace](https://testnet.snowtrace.io/address/0xB114A2B17F1E7b028249cCFec2D98D25a3Bbe9C0) |
 
-No address is invented here. `npm run deploy:*` aborts with a clear message
-when `DEPLOYER_PRIVATE_KEY` is unset or the account is unfunded.
+These are verified Fuji addresses recorded in
+[CONTRACT_DEPLOYMENT.md](./CONTRACT_DEPLOYMENT.md). Deployment scripts still
+abort when a deployer key is unset or the account is unfunded.
 
 ## Testing
 
@@ -352,14 +376,14 @@ round trip, and SDK interoperability/convention pinning. Breakdown in
 - [x] Meta-address sharing UI with QR code generation.
 - [x] Hardhat workspace, `ERC5564Announcer` + `StealthPaymentRouter`, 39 contract tests (Milestone 3).
 - [x] Encrypted vault: Argon2id + AES-256-GCM, IndexedDB, downloadable backup, cross-device recovery (Milestone 3).
-- [ ] Deploy contracts to Fuji (needs a funded testnet deployer key).
+- [x] Deploy and verify contracts to Fuji.
 - [ ] Scanner worker.
 - [x] Client-side stealth key generation and full ERC-5564 scheme 1 derivation (Milestone 2).
 - [x] Receiver announcement matching and one-time spending-key recovery, with a verified round trip.
-- [ ] Native AVAX payment flow (send → announce → detect → forward) working end-to-end on Fuji.
-- [ ] Receiver dashboard with detected-payment list.
+- [x] Native AVAX payment flow (send → announce → detect → forward) working end-to-end on Fuji.
+- [x] Receiver dashboard with detected-payment list and live announcement scanning.
 - [ ] Cryptographic test vectors validated against the ERC-5564 reference implementation.
-- [ ] ERC-20 token support + gas-funding mechanism.
+- [x] ERC-20 token support + sender-funded gas top-up mechanism.
 - [ ] Relayer-based gas sponsorship (future).
 - [ ] Mainnet C-Chain deployment (future, post security review).
 
@@ -375,11 +399,11 @@ To keep this README honest and avoid overstating progress:
 - **Cross-layer proof:** 5 integration tests drive the real engine against the real contracts on a local chain — including one where a **vault-recovered identity claims a payment announced before the device was wiped**.
 - Real wallet connection (EIP-6963/EIP-1193) and a live Avalanche RPC block-height read.
 
-**Not deployed**
-- **No contracts exist on Fuji yet.** The canonical ERC-5564 Announcer is confirmed absent on Fuji (`eth_getCode` → `0x`), and deploying ours requires a funded testnet deployer key that was not available. The scripts refuse to run rather than fabricate an address. Every address field in this repo is empty or marked pending.
+**Deployed testnet contracts**
+- Fuji has a verified reference-compatible Announcer, Router, and test token. The canonical ERC-5564 singleton address is absent on Fuji, so the project uses its own separately deployed compatible Announcer instance.
 
-**Still demo data**
-- Dashboard balances, payment history and the Scanner's event feed remain local mock data; live chain scanning is a later milestone. The Scanner's *announcement checker* is real crypto.
+**Live versus demo data**
+- Fuji balances, payment sending, announcement scanning, detected payments, and native forwarding use live chain data when the documented environment variables are configured. Local mock data remains only for views that have no matching on-chain record.
 
 **Security posture**
 - Private keys are generated and used only in the browser; never sent to an API, never written to a database, never in `localStorage`/`sessionStorage`/cookies, never logged.

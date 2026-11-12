@@ -38,11 +38,37 @@ export const NETWORKS: Record<NetworkKey, NetworkConfig> = {
     currencySymbol: "AVAX",
     testnet: false,
   },
+  "aurora-testnet": {
+    key: "aurora-testnet",
+    family: "evm",
+    chainId: 1313161555,
+    name: "Aurora Testnet",
+    shortName: "Aurora Testnet",
+    rpcUrl: "https://testnet.aurora.dev",
+    explorerUrl: "https://explorer.testnet.aurora.dev",
+    explorerName: "Aurora Explorer Testnet",
+    explorerApiUrl: "https://explorer.testnet.aurora.dev/api",
+    currencySymbol: "ETH",
+    testnet: true,
+  },
+  "aurora-mainnet": {
+    key: "aurora-mainnet",
+    family: "evm",
+    chainId: 1313161554,
+    name: "Aurora Mainnet",
+    shortName: "Aurora Mainnet",
+    rpcUrl: "https://mainnet.aurora.dev",
+    explorerUrl: "https://explorer.aurora.dev",
+    explorerName: "Aurora Explorer",
+    explorerApiUrl: "https://explorer.aurora.dev/api",
+    currencySymbol: "ETH",
+    testnet: false,
+  },
 };
 
 export const DEFAULT_NETWORK: NetworkKey = "fuji";
 
-export const SUPPORTED_NETWORKS = [NETWORKS.fuji, NETWORKS.mainnet];
+export const SUPPORTED_NETWORKS = Object.values(NETWORKS);
 
 export const NEAR_NETWORKS: Record<
   NearNetworkConfig["key"],
@@ -111,6 +137,16 @@ export const CONTRACTS: Record<
     router: readAddress(process.env.NEXT_PUBLIC_MAINNET_ROUTER_ADDRESS),
     testToken: readAddress(process.env.NEXT_PUBLIC_MAINNET_TEST_TOKEN_ADDRESS),
   },
+  "aurora-testnet": {
+    announcer: readAddress(process.env.NEXT_PUBLIC_AURORA_TESTNET_ANNOUNCER_ADDRESS),
+    router: readAddress(process.env.NEXT_PUBLIC_AURORA_TESTNET_ROUTER_ADDRESS),
+    testToken: readAddress(process.env.NEXT_PUBLIC_AURORA_TESTNET_TEST_TOKEN_ADDRESS),
+  },
+  "aurora-mainnet": {
+    announcer: readAddress(process.env.NEXT_PUBLIC_AURORA_MAINNET_ANNOUNCER_ADDRESS),
+    router: readAddress(process.env.NEXT_PUBLIC_AURORA_MAINNET_ROUTER_ADDRESS),
+    testToken: readAddress(process.env.NEXT_PUBLIC_AURORA_MAINNET_TEST_TOKEN_ADDRESS),
+  },
 };
 
 /**
@@ -122,7 +158,12 @@ export const CONTRACTS: Record<
  */
 export function assetsFor(network: NetworkKey): AssetInfo[] {
   const assets: AssetInfo[] = [
-    { symbol: "AVAX", name: "Avalanche", decimals: 18, native: true },
+    {
+      symbol: NETWORKS[network].currencySymbol,
+      name: NETWORKS[network].name,
+      decimals: 18,
+      native: true,
+    },
   ];
   const testToken = CONTRACTS[network].testToken;
   if (testToken) {
@@ -141,6 +182,12 @@ export function assetsFor(network: NetworkKey): AssetInfo[] {
 export const SCAN_START_BLOCK: Record<NetworkKey, bigint> = {
   fuji: BigInt(process.env.NEXT_PUBLIC_FUJI_SCAN_START_BLOCK ?? "0"),
   mainnet: BigInt(process.env.NEXT_PUBLIC_MAINNET_SCAN_START_BLOCK ?? "0"),
+  "aurora-testnet": BigInt(
+    process.env.NEXT_PUBLIC_AURORA_TESTNET_SCAN_START_BLOCK ?? "0",
+  ),
+  "aurora-mainnet": BigInt(
+    process.env.NEXT_PUBLIC_AURORA_MAINNET_SCAN_START_BLOCK ?? "0",
+  ),
 };
 
 export function contractsFor(network: NetworkKey) {

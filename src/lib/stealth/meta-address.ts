@@ -1,5 +1,6 @@
 import {
   AVALANCHE_CHAIN_LABEL,
+  AURORA_CHAIN_LABEL,
   LENGTHS,
   SCHEME_ID_SECP256K1,
   STEALTH_URI_SCHEME,
@@ -88,10 +89,10 @@ export function parseStealthMetaAddress(
         `Stealth meta-address must begin with "${STEALTH_URI_SCHEME}:".`,
       );
     }
-    if (label !== AVALANCHE_CHAIN_LABEL) {
+    if (label !== AVALANCHE_CHAIN_LABEL && label !== AURORA_CHAIN_LABEL) {
       throw new StealthError(
         "UNSUPPORTED_CHAIN",
-        `Unsupported chain label "${label}". StealthPay expects "${AVALANCHE_CHAIN_LABEL}".`,
+        `Unsupported chain label "${label}". StealthPay expects "${AVALANCHE_CHAIN_LABEL}" or "${AURORA_CHAIN_LABEL}".`,
       );
     }
     chainLabel = label;

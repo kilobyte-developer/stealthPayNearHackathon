@@ -1,12 +1,16 @@
 export type Hex = `0x${string}`;
 
-export type NetworkKey = "fuji" | "mainnet";
+export type NetworkKey =
+  | "fuji"
+  | "mainnet"
+  | "aurora-testnet"
+  | "aurora-mainnet";
 export type NearNetworkKey = "near-testnet" | "near-mainnet";
 export type ChainFamily = "evm" | "near";
 
 export interface NetworkConfig {
   key: NetworkKey;
-  family: ChainFamily;
+  family: "evm";
   chainId: number;
   name: string;
   shortName: string;

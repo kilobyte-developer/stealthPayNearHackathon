@@ -1,7 +1,7 @@
 import { generateStealthAddress } from "@scopelift/stealth-address-sdk";
 import { utils } from "@noble/secp256k1";
 import {
-  AVALANCHE_CHAIN_LABEL,
+  chainLabelForId,
   SCHEME_ID_SECP256K1,
   STEALTH_URI_SCHEME,
   type SupportedChainId,
@@ -92,7 +92,7 @@ export function deriveWithEphemeralKey({
 
   // Rebuilt from validated parts rather than passing the caller's string
   // through, so the SDK only ever sees a canonical URI.
-  const canonicalUri = `${STEALTH_URI_SCHEME}:${AVALANCHE_CHAIN_LABEL}:${parsed.stealthMetaAddressRaw}`;
+  const canonicalUri = `${STEALTH_URI_SCHEME}:${parsed.chainLabel ?? chainLabelForId(chainId)}:${parsed.stealthMetaAddressRaw}`;
 
   let sdkResult;
   try {

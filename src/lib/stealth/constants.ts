@@ -27,6 +27,7 @@ export const STEALTH_URI_SCHEME = "st";
  * chain-agnostic; only the payment context is chain-specific.
  */
 export const AVALANCHE_CHAIN_LABEL = "avax";
+export const AURORA_CHAIN_LABEL = "aurora";
 
 /** Byte and hex-character lengths for scheme 1 key material. */
 export const LENGTHS = {
@@ -49,7 +50,7 @@ export const LENGTHS = {
 } as const;
 
 /** Avalanche chain ids StealthPay binds identities and payments to. */
-export const SUPPORTED_CHAIN_IDS = [43113, 43114] as const;
+export const SUPPORTED_CHAIN_IDS = [43113, 43114, 1313161555, 1313161554] as const;
 
 /** Fuji — the default development and demonstration network. */
 export const DEFAULT_CHAIN_ID = 43113 as const;
@@ -60,4 +61,10 @@ export function isSupportedChainId(
   chainId: number,
 ): chainId is SupportedChainId {
   return (SUPPORTED_CHAIN_IDS as readonly number[]).includes(chainId);
+}
+
+export function chainLabelForId(chainId: SupportedChainId): string {
+  return chainId === 1313161554 || chainId === 1313161555
+    ? AURORA_CHAIN_LABEL
+    : AVALANCHE_CHAIN_LABEL;
 }
