@@ -1,5 +1,10 @@
 import { getAddress, isAddress, type Address } from "viem";
-import type { AssetInfo, NetworkConfig, NetworkKey } from "@/types";
+import type {
+  AssetInfo,
+  NearNetworkConfig,
+  NetworkConfig,
+  NetworkKey,
+} from "@/types";
 
 /**
  * Avalanche network configuration.
@@ -9,6 +14,7 @@ import type { AssetInfo, NetworkConfig, NetworkKey } from "@/types";
 export const NETWORKS: Record<NetworkKey, NetworkConfig> = {
   fuji: {
     key: "fuji",
+    family: "evm",
     chainId: 43113,
     name: "Avalanche Fuji C-Chain",
     shortName: "Fuji Testnet",
@@ -21,6 +27,7 @@ export const NETWORKS: Record<NetworkKey, NetworkConfig> = {
   },
   mainnet: {
     key: "mainnet",
+    family: "evm",
     chainId: 43114,
     name: "Avalanche C-Chain",
     shortName: "Avalanche Mainnet",
@@ -36,6 +43,36 @@ export const NETWORKS: Record<NetworkKey, NetworkConfig> = {
 export const DEFAULT_NETWORK: NetworkKey = "fuji";
 
 export const SUPPORTED_NETWORKS = [NETWORKS.fuji, NETWORKS.mainnet];
+
+export const NEAR_NETWORKS: Record<
+  NearNetworkConfig["key"],
+  NearNetworkConfig
+> = {
+  "near-testnet": {
+    key: "near-testnet",
+    family: "near",
+    networkId: "testnet",
+    name: "NEAR Testnet",
+    shortName: "NEAR Testnet",
+    rpcUrl: "https://rpc.testnet.near.org",
+    explorerUrl: "https://testnet.nearblocks.io",
+    explorerName: "NEARBlocks Testnet",
+    currencySymbol: "NEAR",
+    testnet: true,
+  },
+  "near-mainnet": {
+    key: "near-mainnet",
+    family: "near",
+    networkId: "mainnet",
+    name: "NEAR Mainnet",
+    shortName: "NEAR Mainnet",
+    rpcUrl: "https://rpc.mainnet.near.org",
+    explorerUrl: "https://nearblocks.io",
+    explorerName: "NEARBlocks",
+    currencySymbol: "NEAR",
+    testnet: false,
+  },
+};
 
 export function networkByChainId(chainId: number): NetworkConfig | undefined {
   return SUPPORTED_NETWORKS.find((n) => n.chainId === chainId);

@@ -1,9 +1,12 @@
 export type Hex = `0x${string}`;
 
 export type NetworkKey = "fuji" | "mainnet";
+export type NearNetworkKey = "near-testnet" | "near-mainnet";
+export type ChainFamily = "evm" | "near";
 
 export interface NetworkConfig {
   key: NetworkKey;
+  family: ChainFamily;
   chainId: number;
   name: string;
   shortName: string;
@@ -19,6 +22,21 @@ export interface NetworkConfig {
    */
   explorerApiUrl: string;
 }
+
+export interface NearNetworkConfig {
+  key: NearNetworkKey;
+  family: "near";
+  networkId: "testnet" | "mainnet";
+  name: string;
+  shortName: string;
+  rpcUrl: string;
+  explorerUrl: string;
+  explorerName: string;
+  currencySymbol: "NEAR";
+  testnet: boolean;
+}
+
+export type SupportedNetworkConfig = NetworkConfig | NearNetworkConfig;
 
 export interface AssetInfo {
   symbol: string;
