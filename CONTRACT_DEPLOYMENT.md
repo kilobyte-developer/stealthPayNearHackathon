@@ -13,7 +13,7 @@
 | Field | Value |
 |---|---|
 | Project | StealthPay |
-| Program | Team1 India – Speedrun 2026 |
+| Program | NEAR HACKATHON 2026 |
 | Deployment environment | Avalanche Fuji Testnet **only** |
 | Network name | Avalanche Fuji C-Chain |
 | Chain ID | `43113` |

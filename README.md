@@ -2,9 +2,11 @@
 
 **Private-by-default payments on Avalanche — receive funds without exposing your wallet identity.**
 
-> Built for **Team1 India – Speedrun 2026** on Avalanche (*Build Anything on Avalanche* cycle).
+> Built for **NEAR HACKATHON 2026** as an existing EVM privacy product with additive NEAR ecosystem work.
 
-> **Project status:** **Milestones 1–3 complete.** Frontend, ERC-5564 cryptographic engine, Avalanche smart contracts, and an encrypted key-recovery vault are all implemented and tested (89 unit + 39 contract + 5 cross-layer integration tests). **Contracts are NOT yet deployed to Fuji** — no funded deployer key was available, and no address is invented. Not audited. Not mainnet-ready. See [Project Status](#project-status).
+> **Project status:** The pre-existing EVM privacy-payment product is implemented, tested, and deployed to Fuji. NEAR HACKATHON work adds native NEAR wallet/RPC/adapter infrastructure and Aurora network configuration without changing the ERC-5564 recipient-privacy model. Native NEAR stealth contracts and Aurora deployments are not claimed as complete. Not audited. Not mainnet-ready. See [Project Status](#project-status).
+
+> **Hackathon disclosure:** StealthPay began as an existing EVM privacy-payment project. Per the hackathon rules, only the NEAR ecosystem integration built during the event is presented as hackathon work; the original product remains the baseline.
 
 ---
 
@@ -27,6 +29,7 @@
 - [Smart Contract Deployment](#smart-contract-deployment)
 - [Testing](#testing)
 - [Demo & Deployment](#demo--deployment)
+- [NEAR HACKATHON Submission](#near-hackathon-submission)
 - [Security & Privacy Limitations](#security--privacy-limitations)
 - [Roadmap](#roadmap)
 - [Project Status](#project-status)
@@ -133,7 +136,7 @@ flowchart TB
 | Backend | Node.js, TypeScript, Next.js API routes, standalone scanner worker | Planned |
 | Database | Supabase (PostgreSQL) — public metadata only, never private keys | Planned |
 | Deployment | Vercel (frontend), Railway or similar (scanner worker), Hardhat (contracts) | Planned |
-| Testing | Vitest 5 (89 unit, 5 integration) + Hardhat (39 contract) | **Built** |
+| Testing | Vitest 5 (104 unit, 6 integration) + Hardhat (39 contract) | **Built** |
 
 Full rationale for every choice is in **[TECH_STACK.md](./TECH_STACK.md)**.
 
@@ -161,8 +164,8 @@ Fuji is the default network everywhere in the app. Real assets are never used du
 
 ## NEAR Hackathon Integration
 
-The Avalanche stealth-payment application is the pre-existing baseline. The
-NEAR HACKATHON work is additive and does not replace the core privacy model:
+The EVM stealth-payment application is the pre-existing baseline. The NEAR
+HACKATHON work is additive and does not replace the core privacy model:
 
 - Native NEAR Testnet and Mainnet network metadata was added.
 - A typed native NEAR JSON-RPC client reads account balances and finalized blocks.
@@ -170,21 +173,21 @@ NEAR HACKATHON work is additive and does not replace the core privacy model:
     restoration, sign-out, and native transfer signing.
 - A chain-neutral adapter boundary keeps EVM/Avalanche and native NEAR paths
     separate.
-- Aurora Testnet and Mainnet are configured as EVM-compatible NEAR ecosystem
-    targets, so the existing Solidity router and ERC-5564 scheme can be reused
-    without changing the privacy model.
+- Aurora Testnet and Mainnet network metadata is configured as the EVM-compatible
+    NEAR ecosystem path, so the existing Solidity router and ERC-5564 scheme can
+    be reused without changing the privacy model.
 
-The existing ERC-5564 scheme, Avalanche contracts, scanner, vault, and UI remain
-unchanged. Native NEAR stealth-payment contracts, native NEAR announcement
-scanning, and a NEAR-specific stealth cryptographic scheme are future work and
-are not claimed as implemented yet.
+The existing ERC-5564 scheme, contracts, scanner, vault, and UI remain intact.
+Native NEAR stealth-payment contracts, native NEAR announcement scanning, a
+NEAR-specific stealth cryptographic scheme, and live Aurora contract deployment
+are future work and are not claimed as implemented.
 
 ## Project Structure
 
 Current layout — the frontend exists; directories marked *planned* do not.
 
 ```
-stealth pay team1/
+stealthpay/
 ├── src/
 │   ├── app/
 │   │   ├── page.tsx                 # Landing page
@@ -207,7 +210,7 @@ stealth pay team1/
 │   ├── lib/                         # utils, format, EIP-1193, placeholders
 │   ├── providers/                   # Wallet + toast providers
 │   └── types/                       # Shared domain types
-├── contracts/                        # PLANNED — Hardhat project
+├── contracts/                        # Hardhat project — deployed Fuji contracts
 ├── workers/scanner/                  # PLANNED — background scanner
 ├── PROJECT_FLOW.md
 ├── README.md
@@ -220,13 +223,15 @@ Requires **Node.js 20+** (developed on Node 26) and npm.
 
 ```bash
 git clone <repository-url>
-cd "stealth pay team1"
+cd stealthpay
 npm install
 ```
 
 ## Environment Variables
 
-The frontend currently needs **no environment variables** — network configuration lives in [`src/config/networks.ts`](src/config/networks.ts) and Fuji is the default. The variables below are planned for when the contracts, backend and scanner land.
+The frontend reads network and deployed-contract configuration from local
+environment variables. Fuji remains the default test network. Never commit
+`.env`, `.env.local`, private keys, or wallet secrets.
 
 ```bash
 # Avalanche network
@@ -317,9 +322,9 @@ abort when a deployer key is unset or the account is unfunded.
 ## Testing
 
 ```bash
-npm test               # Vitest — 89 unit tests (crypto engine + vault)
+npm test               # Vitest — 104 unit tests (crypto engine, vault, adapters)
 npm run test:contracts # Hardhat — 39 contract tests
-npm run test:integration # 5 cross-layer tests (spawns a local Hardhat node)
+npm run test:integration # 6 cross-layer tests (spawns a local Hardhat node)
 npm run test:all       # all three, in order
 npm run typecheck      # tsc --noEmit, strict mode
 npm run lint           # ESLint (flat config)
@@ -365,7 +370,7 @@ round trip, and SDK interoperability/convention pinning. Breakdown in
 **Other key security notes** (full detail in [PROJECT_FLOW.md §21](./PROJECT_FLOW.md#21-security-considerations)):
 - Private keys (viewing, spending, ephemeral, and derived one-time keys) are generated and used client-side only, and are never sent to a backend API or stored in Supabase.
 - Every detected payment is verified against an actual on-chain transfer — an announcement alone is never treated as proof of payment.
-- ERC-20 support (planned, post-MVP) introduces a gas-funding problem — a stealth address holding only tokens has no AVAX to pay for its own outgoing transaction. See [PROJECT_FLOW.md §22](./PROJECT_FLOW.md#22-gas-management) for the candidate solutions under evaluation.
+- ERC-20 support requires sender-funded native gas because a stealth address holding only tokens cannot pay for its own outgoing transaction. See [PROJECT_FLOW.md §22](./PROJECT_FLOW.md#22-gas-management).
 
 ## Roadmap
 
@@ -377,10 +382,12 @@ round trip, and SDK interoperability/convention pinning. Breakdown in
 - [x] Hardhat workspace, `ERC5564Announcer` + `StealthPaymentRouter`, 39 contract tests (Milestone 3).
 - [x] Encrypted vault: Argon2id + AES-256-GCM, IndexedDB, downloadable backup, cross-device recovery (Milestone 3).
 - [x] Deploy and verify contracts to Fuji.
+- [x] Add native NEAR wallet, RPC, and chain adapter infrastructure.
+- [x] Add Aurora network configuration without claiming a live deployment.
 - [ ] Scanner worker.
 - [x] Client-side stealth key generation and full ERC-5564 scheme 1 derivation (Milestone 2).
 - [x] Receiver announcement matching and one-time spending-key recovery, with a verified round trip.
-- [x] Native AVAX payment flow (send → announce → detect → forward) working end-to-end on Fuji.
+- [x] Native payment flow (send → announce → detect → forward) working end-to-end on Fuji.
 - [x] Receiver dashboard with detected-payment list and live announcement scanning.
 - [ ] Cryptographic test vectors validated against the ERC-5564 reference implementation.
 - [x] ERC-20 token support + sender-funded gas top-up mechanism.
@@ -394,10 +401,10 @@ To keep this README honest and avoid overstating progress:
 **Built and working**
 - **Frontend (M1):** landing page plus `/dashboard`, `/receive`, `/send`, `/activity`, `/identity`, `/scanner`, `/settings`, in a coherent Neo-Brutalist design system.
 - **Cryptographic engine (M2):** real ERC-5564 scheme 1 (SECP256k1) identity generation, meta-address handling, sender derivation, receiver matching and one-time spending-key recovery. See [docs/CRYPTO_ENGINE.md](./docs/CRYPTO_ENGINE.md).
-- **Smart contracts (M3):** `ERC5564Announcer` (canonical event signature) and `StealthPaymentRouter` (native AVAX, ERC-20, optional AVAX gas top-up, atomic payment + announcement). 39 Hardhat tests. See [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md).
+- **Smart contracts (M3):** `ERC5564Announcer` (canonical event signature) and `StealthPaymentRouter` (native payment, ERC-20, optional native gas top-up, atomic payment + announcement). 39 Hardhat tests. See [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md).
 - **Encrypted key recovery (M3):** Argon2id + AES-256-GCM vault in IndexedDB, downloadable `.stealthpay` backup, cross-device restore, password change, auto-lock. A refresh now **locks** the identity instead of destroying it. See [docs/KEY_RECOVERY.md](./docs/KEY_RECOVERY.md).
-- **Cross-layer proof:** 5 integration tests drive the real engine against the real contracts on a local chain — including one where a **vault-recovered identity claims a payment announced before the device was wiped**.
-- Real wallet connection (EIP-6963/EIP-1193) and a live Avalanche RPC block-height read.
+- **Cross-layer proof:** 6 integration tests drive the real engine against the real contracts on a local chain — including one where a **vault-recovered identity claims a payment announced before the device was wiped**.
+- Real EVM wallet connection (EIP-6963/EIP-1193), native NEAR wallet connection via NEAR Connect, and live RPC reads.
 
 **Deployed testnet contracts**
 - Fuji has a verified reference-compatible Announcer, Router, and test token. The canonical ERC-5564 singleton address is absent on Fuji, so the project uses its own separately deployed compatible Announcer instance.
@@ -412,12 +419,66 @@ To keep this README honest and avoid overstating progress:
 - **There is no password reset.** Lose both the backup file and its password and the identity is unrecoverable by anyone, by design.
 - **Not audited.** Depends on a **beta** SDK (`1.0.0-beta.5`, pinned). Fuji testnet only.
 
-**Not yet decided**
-- Scanner architecture (client-side vs. a protected server-side scanner), and the supported-token policy.
+**NEAR-specific limitations**
+- Native NEAR stealth payments require a separately designed and reviewed account/key protocol; the EVM ERC-5564 scheme is not silently reused for native NEAR accounts.
+- Aurora contracts are configured in the application but have not been deployed in this repository.
+
+## NEAR HACKATHON Submission
+
+### Recommended tracks
+
+- `privacy` — recipient identity unlinkability is the product's core problem.
+- `open` — chain abstraction and NEAR ecosystem integration.
+
+Add `realworld` only if the final demo clearly presents a real-world payment,
+invoice, payroll, or remittance workflow. Do not claim `defi` unless a real
+NEAR DeFi or NEAR Intents settlement flow is implemented.
+
+### Reproducible judge flow
+
+```bash
+npm install
+npm run typecheck
+npm test
+npm run build
+npm --prefix contracts install
+npm --prefix contracts run compile
+npm --prefix contracts run test
+```
+
+For the implemented payment demonstration, configure the documented Fuji
+contract addresses in the local environment, start `npm run dev`, open the
+dashboard, create or unlock an identity, derive a payment, scan the announcement,
+and forward a detected native payment. The Fuji deployment registry is in
+[CONTRACT_DEPLOYMENT.md](./CONTRACT_DEPLOYMENT.md).
+
+The NEAR-specific work that can be inspected without secrets is in:
+
+- [src/providers/near-provider.tsx](./src/providers/near-provider.tsx)
+- [src/lib/chain/near-client.ts](./src/lib/chain/near-client.ts)
+- [src/lib/chain/adapters.ts](./src/lib/chain/adapters.ts)
+
+### Human submission checklist
+
+Before submission, the human team must:
+
+- Make the repository public by `2026-11-14T23:59:00Z`.
+- Add a license file before submission if the repository does not already contain one.
+- Record a demo video or prepare screenshots showing one complete user flow.
+- Publish the required X post stating that the project was built at NEAR HACKATHON,
+    tagging `@NEARProtocol` and `#NEARHackathon`.
+- Collect the project name, lead name, email, team size, tracks, payout account,
+    public repository URL, demo-post URL, and consent.
+- Print and review the exact submission JSON before sending it.
+- Submit only once. Use the organizer change-request process for corrections;
+    never submit the same repository a second time.
+
+Never commit private keys, wallet seeds, submission payloads, or personal
+contact information.
 
 ## Team & Acknowledgements
 
-Built for **Team1 India – Speedrun 2026** ([event details](https://docs.avax.network/events/3f8d455d-1eb5-425b-b859-4261a0ff8ad6)).
+Built for **NEAR HACKATHON 2026**. See [HACKATHON (1).md](./HACKATHON%20(1).md) for submission requirements.
 
 - Team: _TBD_
 - AI tools used (per Speedrun disclosure requirements): **Claude (Claude Code)** was used to draft the project architecture documentation (`PROJECT_FLOW.md`, `TECH_STACK.md`, this README) and to implement the frontend UI — the design system, landing page, dashboard screens, wallet layer and mock data. All cryptographic design decisions follow the ERC-5564 specification and remain subject to human review and test-vector validation before any mainnet use.
@@ -428,7 +489,7 @@ Built for **Team1 India – Speedrun 2026** ([event details](https://docs.avax.n
 - [Avalanche C-Chain Documentation](https://build.avax.network/docs/primary-network)
 - [Avalanche C-Chain RPCs](https://build.avax.network/docs/rpcs/c-chain)
 - [Avalanche Fuji Testnet Explorer](https://build.avax.network/explorer/fuji/c-chain)
-- [Team1 India – Speedrun 2026](https://docs.avax.network/events/3f8d455d-1eb5-425b-b859-4261a0ff8ad6)
+- [NEAR HACKATHON rules](./HACKATHON%20(1).md)
 - [docs/CRYPTO_ENGINE.md](./docs/CRYPTO_ENGINE.md) — cryptographic engine: architecture, verified conventions, security limits
 - [docs/KEY_RECOVERY.md](./docs/KEY_RECOVERY.md) — encrypted vault, backup format, threat model
 - [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) — contracts, Avalanche EVM target, deployment procedure

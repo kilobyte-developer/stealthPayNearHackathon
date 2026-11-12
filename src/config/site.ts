@@ -4,7 +4,7 @@ export const SITE = {
   supportingTagline: "Receive privately. Spend directly. Stay unlinkable.",
   description:
     "StealthPay is a privacy-preserving payment application. Receive cryptocurrency through unique one-time stealth addresses without publishing your reusable wallet identity.",
-  program: "Team1 India – Speedrun 2026",
+  program: "NEAR HACKATHON 2026",
 } as const;
 
 /**
