@@ -41,7 +41,7 @@ export function FinalCta() {
         </div>
 
         <p className="text-ink/65 mt-7 text-xs leading-relaxed">
-          Runs on Avalanche Fuji. Your keys are generated and encrypted in your
+          Runs on a public test network. Your keys are generated and encrypted in your
           own browser.
         </p>
       </div>

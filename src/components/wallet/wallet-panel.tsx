@@ -39,7 +39,7 @@ export function WalletPanel() {
           {unsupportedChain ? (
             <p className="border-ink bg-coral/30 mt-2.5 flex items-start gap-1.5 border-2 p-2 text-[0.65rem] leading-relaxed font-medium">
               <TriangleAlert className="mt-0.5 size-3 shrink-0" aria-hidden="true" />
-              Unsupported chain — switch to Fuji.
+              Unsupported chain — switch to a supported network.
             </p>
           ) : null}
 

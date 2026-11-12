@@ -57,5 +57,5 @@ export const MARKETING_NAV = [
   { href: "/#how-it-works", label: "How It Works" },
   { href: "/#features", label: "Features" },
   { href: "/#security", label: "Security" },
-  { href: "/#avalanche", label: "Avalanche" },
+  { href: "/#avalanche", label: "Network" },
 ];

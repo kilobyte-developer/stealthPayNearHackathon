@@ -40,7 +40,7 @@ export function NetworkSelector({ className }: { className?: string }) {
     return (
       <span
         className={faceClasses}
-        title="Connect a wallet to switch networks. Fuji is the configured default."
+        title="Connect a wallet to switch networks. The test network is the configured default."
       >
         {face}
       </span>
@@ -84,7 +84,7 @@ export function NetworkSelector({ className }: { className?: string }) {
             </DropdownMenu.Item>
           ))}
           <p className="text-grey border-ink/15 mt-1 border-t-2 px-2.5 py-2 text-[0.65rem] leading-relaxed">
-            Fuji is the default for development and demos. Never use real
+            The test network is the default for development and demos. Never use real
             assets while testing.
           </p>
         </DropdownMenu.Content>

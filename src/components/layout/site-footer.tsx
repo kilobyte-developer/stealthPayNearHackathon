@@ -15,9 +15,9 @@ const PRODUCT_LINKS = [
 
 const REFERENCE_LINKS = [
   { label: "ERC-5564 Specification", href: LINKS.erc5564 },
-  { label: "Avalanche C-Chain Docs", href: LINKS.avalancheDocs },
-  { label: "Avalanche C-Chain RPC", href: LINKS.avalancheRpc },
-  { label: "Fuji Explorer (Snowtrace)", href: LINKS.fujiExplorer },
+  { label: "Network documentation", href: LINKS.avalancheDocs },
+  { label: "Public RPC", href: LINKS.avalancheRpc },
+  { label: "Testnet explorer", href: LINKS.fujiExplorer },
   { label: "Team1 India – Speedrun", href: LINKS.speedrun },
 ];
 
@@ -37,12 +37,12 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="text-paper/70 mt-4 max-w-xs text-sm leading-relaxed">
-              {SITE.supportingTagline} Privacy-preserving payments on Avalanche
-              using ERC-5564 stealth addresses.
+              {SITE.supportingTagline} Privacy-preserving payments using
+              ERC-5564 stealth addresses.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
               <Badge tone="lime" size="sm">
-                Avalanche Fuji
+                Testnet
               </Badge>
               <Badge tone="white" size="sm">
                 ERC-5564
@@ -136,7 +136,7 @@ export function SiteFooter() {
               identity unlinkability</strong>, not complete transaction
               anonymity. Sender addresses, destination stealth addresses,
               transaction amounts, timing and any onward transfers all remain
-              publicly visible on Avalanche. StealthPay is not a mixer, does not
+              publicly visible on the network. StealthPay is not a mixer, does not
               provide confidential balances, and does not use zero-knowledge
               proofs.
             </p>
@@ -146,7 +146,7 @@ export function SiteFooter() {
             <p>
               {SITE.name} — built for {SITE.program}.
             </p>
-            <p>Avalanche Fuji testnet only. Never use real assets.</p>
+            <p>Testnet only. Never use real assets.</p>
           </div>
         </div>
       </div>

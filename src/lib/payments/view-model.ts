@@ -84,7 +84,7 @@ export function totalNativeWei(payments: DetectedPayment[]): bigint {
     .reduce((sum, p) => sum + p.verifiedBalance, 0n);
 }
 
-export function formatAvax(wei: bigint, maxDecimals = 4): string {
+export function formatNative(wei: bigint, maxDecimals = 4): string {
   const full = formatUnits(wei, 18);
   if (!full.includes(".")) return full;
   const [whole, frac] = full.split(".");

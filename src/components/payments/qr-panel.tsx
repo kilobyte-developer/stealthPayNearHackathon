@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/toast";
 
 /**
  * Renders the stealth meta-address as a scannable QR code. The encoded payload
- * is the full `st:avax:…` URI, which is entirely public key material.
+ * is the full stealth meta-address URI, which is entirely public key material.
  */
 export function QrPanel({
   value,

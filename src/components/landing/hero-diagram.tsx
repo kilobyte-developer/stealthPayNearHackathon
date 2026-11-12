@@ -4,9 +4,9 @@ import { SectionLabel } from "@/components/ui/section-label";
 import { cn } from "@/lib/utils";
 
 const STEALTH_ADDRESSES = [
-  { short: "0x7Ae4…41Be", amount: "10 AVAX" },
-  { short: "0x3F19…a9E7", amount: "2.5 AVAX" },
-  { short: "0xB62f…6F23", amount: "0.75 AVAX" },
+  { short: "0x7Ae4…41Be", amount: "10 units" },
+  { short: "0x3F19…a9E7", amount: "2.5 units" },
+  { short: "0xB62f…6F23", amount: "0.75 units" },
 ];
 
 function Arrow({ className }: { className?: string }) {

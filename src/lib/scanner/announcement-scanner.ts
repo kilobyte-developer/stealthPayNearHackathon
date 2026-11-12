@@ -439,7 +439,7 @@ export async function scanAnnouncements(
       token: parsed.token,
       tokenSymbol,
       tokenDecimals,
-      nativeSymbol: NETWORKS[network].currencySymbol,
+      nativeSymbol: "Native",
       announcedAmount: parsed.amount,
       verifiedBalance,
       nativeBalance,

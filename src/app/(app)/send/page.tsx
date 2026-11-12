@@ -14,7 +14,7 @@ export default function SendPage() {
         description="Pay a stealth meta-address. A fresh one-time destination is derived for this payment alone, and the recipient's reusable wallet never appears in the transaction."
         actions={
           <Badge tone="muted" size="md">
-            Native AVAX is MVP scope
+            Native payments are MVP scope
           </Badge>
         }
       />

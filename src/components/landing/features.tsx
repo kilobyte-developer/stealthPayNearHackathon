@@ -54,8 +54,8 @@ const FEATURES: Feature[] = [
   },
   {
     icon: Coins,
-    title: "Native AVAX payments",
-    body: "The MVP target: send and receive native AVAX on the Avalanche C-Chain.",
+    title: "Native payments",
+    body: "Send and receive native assets through one-time stealth addresses.",
     scope: "mvp",
     accent: "white",
   },
@@ -75,8 +75,8 @@ const FEATURES: Feature[] = [
   },
   {
     icon: Snowflake,
-    title: "Avalanche integration",
-    body: "Contracts and payments run on the Avalanche C-Chain, demonstrated end to end on Fuji.",
+    title: "Network integration",
+    body: "Contracts and payments run end to end on a public EVM test network.",
     scope: "mvp",
     accent: "lime",
   },
@@ -102,7 +102,7 @@ export function Features() {
         <Badge tone="lime" size="sm">
           MVP scope
         </Badge>
-        <span className="text-grey text-xs">Available now on Fuji</span>
+        <span className="text-grey text-xs">Available now on testnet</span>
         <span className="bg-ink/15 hidden h-5 w-0.5 sm:block" />
         <Badge tone="muted" size="sm">
           Planned
@@ -152,8 +152,8 @@ export function Features() {
 
       <p className="border-ink bg-paper-2 mt-8 border-2 p-4 text-sm leading-relaxed">
         <strong className="font-display">Scope:</strong> StealthPay targets
-        native AVAX first. ERC-20 payments are supported by the payment router
-        but need native AVAX at the destination before the tokens can be moved,
+        native payments first. ERC-20 payments are supported by the payment router
+        but need native gas at the destination before the tokens can be moved,
         which is why they are listed separately above.
       </p>
     </Section>

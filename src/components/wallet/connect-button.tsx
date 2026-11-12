@@ -135,8 +135,8 @@ export function ConnectButton({
 
             {unsupportedChain ? (
               <p className="bg-coral/25 border-ink/15 m-1 border-2 p-2 text-[0.7rem] leading-relaxed font-medium">
-                This wallet is on an unsupported chain. Switch to Avalanche
-                Fuji to continue.
+                This wallet is on an unsupported chain. Switch to a supported
+                network to continue.
               </p>
             ) : null}
 

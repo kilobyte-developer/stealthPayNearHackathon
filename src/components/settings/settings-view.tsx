@@ -135,7 +135,7 @@ export function SettingsView() {
 
         <Row
           label="Network preference"
-          hint="Fuji is the default. Switching requires a connected wallet."
+          hint="The default test network is selected automatically. Switching requires a connected wallet."
         >
           {SUPPORTED_NETWORKS.map((n) => (
             <Button
@@ -215,7 +215,7 @@ export function SettingsView() {
             label={n.name}
             hint={
               <>
-                Chain ID {n.chainId} · {n.currencySymbol} ·{" "}
+                Chain ID {n.chainId} · Native asset ·{" "}
                 <span className="font-mono">{n.rpcUrl}</span>
               </>
             }
@@ -237,7 +237,7 @@ export function SettingsView() {
 
         <Row
           label={`RPC status — ${NETWORKS[networkKey].shortName}`}
-          hint="A live reading from the public Avalanche RPC endpoint."
+          hint="A live reading from the public RPC endpoint."
         >
           {rpc.state === "checking" ? (
             <Badge tone="white" size="md">
@@ -322,8 +322,8 @@ export function SettingsView() {
         <Row label="References" hint="Specifications and documentation this build follows.">
           {[
             { label: "ERC-5564", href: LINKS.erc5564 },
-            { label: "Avalanche docs", href: LINKS.avalancheDocs },
-            { label: "C-Chain RPC", href: LINKS.avalancheRpc },
+            { label: "Network docs", href: LINKS.avalancheDocs },
+            { label: "Public RPC", href: LINKS.avalancheRpc },
           ].map((l) => (
             <a
               key={l.href}

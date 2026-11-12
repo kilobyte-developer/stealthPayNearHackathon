@@ -6,11 +6,11 @@ import { HeroDiagram } from "@/components/landing/hero-diagram";
 
 const MARQUEE_ITEMS = [
   "ERC-5564 stealth addresses",
-  "Avalanche C-Chain",
+  "EVM-compatible network",
   "One-time receiving addresses",
   "Private payment detection",
   "Self-custodial",
-  "Fuji testnet demo",
+  "Testnet demo",
 ];
 
 export function Hero() {
@@ -20,10 +20,10 @@ export function Hero() {
         <div className="animate-rise-in flex flex-wrap items-center gap-2">
           <Badge tone="white" size="md">
             <Snowflake className="size-3" aria-hidden="true" />
-            Built on Avalanche
+            Built for private payments
           </Badge>
           <Badge tone="lime" size="md">
-            Fuji Testnet
+            Testnet
           </Badge>
         </div>
 

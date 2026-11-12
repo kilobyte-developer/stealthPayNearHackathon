@@ -64,7 +64,7 @@ export function MetaAddressCard({
         <MonoBlock className="mt-2">{identity.stealthMetaAddress}</MonoBlock>
         <p className="text-grey mt-2 text-xs leading-relaxed">
           Encoded as{" "}
-          <code className="font-mono">st:avax:0x&lt;B&gt;&lt;A&gt;</code> — the
+          <code className="font-mono">st:chain:0x&lt;B&gt;&lt;A&gt;</code> — the
           spending key precedes the viewing key, following the ERC-5564
           canonical ordering. Scheme ID {identity.schemeId} (SECP256k1).
         </p>

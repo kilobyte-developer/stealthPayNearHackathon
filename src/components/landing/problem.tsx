@@ -21,10 +21,10 @@ const EXPOSURES = [
 ];
 
 const INCOMING = [
-  { from: "Client A", amount: "10 AVAX" },
-  { from: "Client B", amount: "2.5 AVAX" },
-  { from: "Marketplace", amount: "0.75 AVAX" },
-  { from: "Client A again", amount: "4 AVAX" },
+  { from: "Client A", amount: "10 units" },
+  { from: "Client B", amount: "2.5 units" },
+  { from: "Marketplace", amount: "0.75 units" },
+  { from: "Client A again", amount: "4 units" },
 ];
 
 export function Problem() {

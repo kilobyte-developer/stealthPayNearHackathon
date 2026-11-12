@@ -3,7 +3,7 @@ export const SITE = {
   tagline: "Your wallet. Your privacy. Your control.",
   supportingTagline: "Receive privately. Spend directly. Stay unlinkable.",
   description:
-    "StealthPay is a privacy-preserving payment application on Avalanche. Receive cryptocurrency through unique one-time stealth addresses without publishing your reusable wallet identity.",
+    "StealthPay is a privacy-preserving payment application. Receive cryptocurrency through unique one-time stealth addresses without publishing your reusable wallet identity.",
   program: "Team1 India – Speedrun 2026",
 } as const;
 

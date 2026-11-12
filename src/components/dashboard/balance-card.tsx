@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { useStealthPayments } from "@/hooks/use-stealth-payments";
 import { useNativeBalance } from "@/hooks/use-native-balance";
 import { useWallet } from "@/providers/wallet-provider";
-import { formatAvax, totalNativeWei } from "@/lib/payments/view-model";
+import { formatNative, totalNativeWei } from "@/lib/payments/view-model";
 import { truncateMiddle } from "@/lib/format";
 
 /**
@@ -69,8 +69,8 @@ export function BalanceCard() {
           ) : (
             <>
               <p className="font-display mt-5 text-[clamp(2.5rem,8vw,4.5rem)] leading-none font-bold">
-                {formatAvax(stealthWei)}
-                <span className="ml-2 text-2xl sm:text-3xl">AVAX</span>
+                {formatNative(stealthWei)}
+                <span className="ml-2 text-2xl sm:text-3xl">Native</span>
               </p>
               <p className="text-ink/70 mt-3 text-sm">
                 Across {nativeCount} stealth{" "}
@@ -128,7 +128,7 @@ export function BalanceCard() {
               {unavailable ? "—" : tokenNeedingGas}
             </dd>
             <p className="text-grey mt-0.5 text-xs">
-              token balances without AVAX to spend
+              token balances without native gas to spend
             </p>
           </div>
 
@@ -143,7 +143,7 @@ export function BalanceCard() {
               {address === null
                 ? "—"
                 : walletBalance.state === "ready" && walletBalance.value !== null
-                  ? `${formatAvax(walletBalance.value)} AVAX`
+                  ? `${formatNative(walletBalance.value)} Native`
                   : walletBalance.state === "error"
                     ? "Unavailable"
                     : "…"}

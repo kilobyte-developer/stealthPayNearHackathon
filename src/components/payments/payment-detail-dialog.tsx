@@ -144,7 +144,7 @@ export function PaymentDetailDialog({
           <div className="border-ink bg-coral/25 mt-5 flex items-start gap-2.5 border-2 p-3">
             <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
             <p className="text-xs leading-relaxed">
-              This address holds a token but needs native AVAX to pay gas before
+              This address holds a token but needs native gas to pay fees before
               the token can be moved.
             </p>
           </div>

@@ -92,8 +92,8 @@ export function NetworkCard() {
       </DataList>
 
       <p className="border-ink bg-paper-2 mt-4 border-2 p-2.5 text-[0.7rem] leading-relaxed">
-        Block height is read live from the public Avalanche RPC. Fuji is a test
-        network — never send real assets to it.
+        Block height is read live from the public RPC. This is a test network —
+        never send real assets to it.
       </p>
     </div>
   );

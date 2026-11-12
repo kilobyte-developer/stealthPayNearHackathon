@@ -19,7 +19,7 @@ import { useActiveNetwork } from "@/providers/wallet-provider";
 export function PaymentRequestForm({ metaAddress }: { metaAddress: string }) {
   const networkKey = useActiveNetwork();
   const assets = React.useMemo(() => assetsFor(networkKey), [networkKey]);
-  const [asset, setAsset] = React.useState("AVAX");
+  const [asset, setAsset] = React.useState("Native");
   const [amount, setAmount] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [amountError, setAmountError] = React.useState<string | null>(null);
@@ -37,7 +37,7 @@ export function PaymentRequestForm({ metaAddress }: { metaAddress: string }) {
   }
 
   function reset() {
-    setAsset("AVAX");
+    setAsset("Native");
     setAmount("");
     setDescription("");
     setAmountError(null);

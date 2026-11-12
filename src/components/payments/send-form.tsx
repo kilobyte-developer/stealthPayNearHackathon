@@ -42,10 +42,10 @@ import {
 
 export function SendForm() {
   const [metaAddress, setMetaAddress] = React.useState("");
-  const [asset, setAsset] = React.useState("AVAX");
+  const [asset, setAsset] = React.useState("Native");
   const [amount, setAmount] = React.useState("");
   const [note, setNote] = React.useState("");
-  const [gasTopUpAvax, setGasTopUpAvax] = React.useState("");
+  const [gasTopUpNative, setGasTopUpNative] = React.useState("");
   const [touched, setTouched] = React.useState({ meta: false, amount: false });
   /**
    * A derivation is bound to the meta-address it came from. Rather than
@@ -89,12 +89,12 @@ export function SendForm() {
   }, [amount]);
 
   const gasTopUpError = React.useMemo(() => {
-    if (selectedAsset?.native || !gasTopUpAvax) return null;
-    const n = Number(gasTopUpAvax);
+    if (selectedAsset?.native || !gasTopUpNative) return null;
+    const n = Number(gasTopUpNative);
     if (!Number.isFinite(n)) return "Enter a valid number.";
     if (n < 0) return "Top-up cannot be negative.";
     return null;
-  }, [gasTopUpAvax, selectedAsset]);
+  }, [gasTopUpNative, selectedAsset]);
 
   const canDerive = !metaError && !amountError && !gasTopUpError;
 
@@ -126,10 +126,10 @@ export function SendForm() {
 
   function reset() {
     setMetaAddress("");
-    setAsset("AVAX");
+    setAsset("Native");
     setAmount("");
     setNote("");
-    setGasTopUpAvax("");
+    setGasTopUpNative("");
     setTouched({ meta: false, amount: false });
     setDerivation(null);
   }
@@ -142,8 +142,8 @@ export function SendForm() {
       token: selectedAsset?.contract ?? null,
       tokenDecimals: selectedAsset?.decimals,
       assetSymbol: asset,
-      gasTopUpAvax:
-        !selectedAsset?.native && gasTopUpAvax ? gasTopUpAvax : undefined,
+      gasTopUpNative:
+        !selectedAsset?.native && gasTopUpNative ? gasTopUpNative : undefined,
     });
     setConfirmOpen(false);
   }
@@ -231,7 +231,7 @@ export function SendForm() {
               id="send-meta"
               rows={3}
               spellCheck={false}
-              placeholder="st:avax:0x…"
+              placeholder="st:chain:0x…"
               value={metaAddress}
               onChange={(e) => setMetaAddress(e.target.value.trim())}
               onBlur={() => setTouched((t) => ({ ...t, meta: true }))}
@@ -296,14 +296,14 @@ export function SendForm() {
               label="Native gas top-up (optional)"
               htmlFor="send-gas-topup"
               error={gasTopUpError}
-              hint={`Sends extra AVAX to the recipient's one-time address so it can pay gas to move the ${asset} later.`}
+              hint={`Sends extra native gas to the recipient's one-time address so it can move the ${asset} later.`}
             >
               <Input
                 id="send-gas-topup"
                 inputMode="decimal"
                 placeholder="0.01"
-                value={gasTopUpAvax}
-                onChange={(e) => setGasTopUpAvax(e.target.value)}
+                value={gasTopUpNative}
+                onChange={(e) => setGasTopUpNative(e.target.value)}
                 aria-invalid={gasTopUpError ? true : undefined}
               />
             </Field>
@@ -510,9 +510,9 @@ export function SendForm() {
                 {formatAmount(amount)} {asset}
               </span>
             </DataRow>
-            {!selectedAsset?.native && gasTopUpAvax && !gasTopUpError ? (
+            {!selectedAsset?.native && gasTopUpNative && !gasTopUpError ? (
               <DataRow label="Gas top-up" mono={false}>
-                {formatAmount(gasTopUpAvax)} AVAX
+                {formatAmount(gasTopUpNative)} Native
               </DataRow>
             ) : null}
             <DataRow label="Network" mono={false}>

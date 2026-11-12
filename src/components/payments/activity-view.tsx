@@ -42,10 +42,10 @@ export function ActivityView() {
 
     const rows = allRows.filter((row) => {
       if (direction !== "all" && row.direction !== direction) return false;
-      // ERC-20 vs native: a native asset's label is always "AVAX"; anything
+      // ERC-20 vs native: a native asset's label is always "Native"; anything
       // else is a token, for incoming and local rows alike.
-      if (asset === "native" && row.assetLabel !== "AVAX") return false;
-      if (asset === "erc20" && row.assetLabel === "AVAX") return false;
+      if (asset === "native" && row.assetLabel !== "Native") return false;
+      if (asset === "erc20" && row.assetLabel === "Native") return false;
 
       if (q) {
         const haystack = [row.from ?? "", row.to, row.transactionHash, row.assetLabel]
@@ -146,7 +146,7 @@ export function ActivityView() {
                   onChange={(e) => setAsset(e.target.value as AssetFilter)}
                 >
                   <option value="all">All assets</option>
-                  <option value="native">Native AVAX</option>
+                  <option value="native">Native</option>
                   <option value="erc20">Tokens</option>
                 </Select>
               </div>

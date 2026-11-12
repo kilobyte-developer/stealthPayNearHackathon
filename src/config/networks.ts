@@ -16,11 +16,11 @@ export const NETWORKS: Record<NetworkKey, NetworkConfig> = {
     key: "fuji",
     family: "evm",
     chainId: 43113,
-    name: "Avalanche Fuji C-Chain",
-    shortName: "Fuji Testnet",
+    name: "Primary EVM Testnet",
+    shortName: "Testnet",
     rpcUrl: "https://api.avax-test.network/ext/bc/C/rpc",
     explorerUrl: "https://testnet.snowtrace.io",
-    explorerName: "Snowtrace Testnet",
+    explorerName: "Block Explorer",
     explorerApiUrl: "https://api-testnet.snowtrace.io/api",
     currencySymbol: "AVAX",
     testnet: true,
@@ -29,11 +29,11 @@ export const NETWORKS: Record<NetworkKey, NetworkConfig> = {
     key: "mainnet",
     family: "evm",
     chainId: 43114,
-    name: "Avalanche C-Chain",
-    shortName: "Avalanche Mainnet",
+    name: "Primary EVM Network",
+    shortName: "Mainnet",
     rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
     explorerUrl: "https://snowtrace.io",
-    explorerName: "Snowtrace",
+    explorerName: "Block Explorer",
     explorerApiUrl: "https://api.snowtrace.io/api",
     currencySymbol: "AVAX",
     testnet: false,
@@ -152,14 +152,14 @@ export const CONTRACTS: Record<
 /**
  * Assets surfaced in the UI for a given network.
  *
- * Native AVAX is always present. The ERC-20 test token only appears once a
+ * The native asset is always present. The ERC-20 test token only appears once a
  * real contract address is configured for that network — there is no
  * `planned`/placeholder entry implying support that is not actually wired up.
  */
 export function assetsFor(network: NetworkKey): AssetInfo[] {
   const assets: AssetInfo[] = [
     {
-      symbol: NETWORKS[network].currencySymbol,
+      symbol: "Native",
       name: NETWORKS[network].name,
       decimals: 18,
       native: true,

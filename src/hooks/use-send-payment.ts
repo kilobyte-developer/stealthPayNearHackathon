@@ -36,8 +36,8 @@ export interface SendPaymentState {
     tokenDecimals?: number;
     /** Display symbol, for the local activity log (e.g. "AVAX", "stUSD"). */
     assetSymbol: string;
-    /** Optional native top-up accompanying a token payment, in AVAX. */
-    gasTopUpAvax?: string;
+    /** Optional native top-up accompanying a token payment. */
+    gasTopUpNative?: string;
   }) => Promise<void>;
   reset: () => void;
 }
@@ -73,7 +73,7 @@ export function useSendPayment(): SendPaymentState {
   }, []);
 
   const send = React.useCallback<SendPaymentState["send"]>(
-    async ({ derived, amount, token, tokenDecimals, assetSymbol, gasTopUpAvax }) => {
+    async ({ derived, amount, token, tokenDecimals, assetSymbol, gasTopUpNative }) => {
       if (blocked !== null || !router) return;
 
       const walletClient = getWalletClient();
@@ -87,7 +87,7 @@ export function useSendPayment(): SendPaymentState {
       setStage("signing");
 
       try {
-        const topUp = gasTopUpAvax ? parseEther(gasTopUpAvax) : 0n;
+        const topUp = gasTopUpNative ? parseEther(gasTopUpNative) : 0n;
 
         if (token) {
           const tokenAmount = parseUnits(amount, tokenDecimals ?? 18);

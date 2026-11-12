@@ -8,7 +8,7 @@ const REASONS = [
   {
     icon: Zap,
     title: "EVM compatibility",
-    body: "The C-Chain runs EVM bytecode, so stealth addresses derived on SECP256k1 are ordinary, valid Avalanche addresses. No bridging, wrapping or custom account model.",
+    body: "EVM bytecode makes SECP256k1-derived stealth addresses ordinary, valid accounts. No bridging, wrapping or custom account model.",
   },
   {
     icon: FileCode2,
@@ -22,8 +22,8 @@ const REASONS = [
   },
   {
     icon: Snowflake,
-    title: "Fuji testing environment",
-    body: "Fuji is the default network for all development and the demo. Real assets are never used during testing.",
+    title: "Testing environment",
+    body: "The default test network keeps development and demos isolated from real assets.",
   },
 ];
 
@@ -31,9 +31,9 @@ export function AvalancheSection() {
   return (
     <Section id="avalanche">
       <SectionHeading
-        eyebrow="Avalanche"
-        title="WHY THE AVALANCHE C-CHAIN."
-        lead="StealthPay needs an EVM chain where derived addresses are first-class accounts and standard contracts just work. The C-Chain provides exactly that — and the project uses it as infrastructure, not as a label."
+        eyebrow="Network"
+        title="WHY EVM COMPATIBILITY."
+        lead="StealthPay needs an EVM chain where derived addresses are first-class accounts and standard contracts just work. The network provides exactly that — and the project uses it as infrastructure, not as a label."
       />
 
       <div className="mt-12 grid gap-5 sm:grid-cols-2">
@@ -104,11 +104,10 @@ export function AvalancheSection() {
       </div>
 
       <p className="border-ink bg-paper-2 mt-6 border-2 p-4 text-sm leading-relaxed">
-        <strong className="font-display">Scope note:</strong> Avalanche-specific
-        primitives such as eERC, ICM and ICTT are optional for this build and
-        are intentionally not used — they do not serve the stealth-address
-        privacy problem, and adding them would inflate the stack without
-        improving the product.
+        <strong className="font-display">Scope note:</strong> Chain-specific
+        primitives are intentionally not used — they do not serve the
+        stealth-address privacy problem, and adding them would inflate the stack
+        without improving the product.
       </p>
     </Section>
   );

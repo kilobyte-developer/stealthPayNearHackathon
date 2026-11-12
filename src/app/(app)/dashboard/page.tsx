@@ -10,7 +10,7 @@ export default function DashboardPage() {
       <PageHeader
         eyebrow="Dashboard"
         title="Your payments."
-        description="Balances and payments are read directly from Avalanche and matched with your private viewing key."
+        description="Balances and payments are read directly from the network and matched with your private viewing key."
       />
 
       <DashboardOverview />
